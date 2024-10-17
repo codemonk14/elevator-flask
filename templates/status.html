@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Elevator Status</title>
+</head>
+<body>
+    <h1>Elevator Status</h1>
+    <table border="1">
+        <tr>
+            <th>Elevator</th>
+            <th>Current Floor</th>
+            <th>People Count</th>
+            <th>Direction</th>
+        </tr>
+        {% for elevator in elevators %}
+        <tr>
+            <td>{{ elevator.elevator_id }}</td>
+            <td>{{ elevator.current_floor }}</td>
+            <td>{{ elevator.people_count }}</td>
+            <td>{{ elevator.direction }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

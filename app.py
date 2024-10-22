@@ -1,9 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for
-from models import db, Elevator, UserRequest
+from models import db, Elevator, UserRequest,log_movement
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///elevator_system.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
@@ -44,16 +43,17 @@ def request_elevator():
         key=lambda e: (abs(e.current_floor - current_floor), e.people_count)
     )
 
-    if nearest_elevator.people_count + num_people <= 20:
+    if nearest_elevator.people_count + num_people <= 20:        
         nearest_elevator.people_count += num_people
-        nearest_elevator.current_floor = destination_floor
-        nearest_elevator.direction = 'up' if destination_floor > current_floor else 'down'
+        nearest_elevator.current_floor = current_floor
+        nearest_elevator.direction = '^' if destination_floor > current_floor else 'V'
         db.session.commit()
 
         user_request = UserRequest(
             current_floor=current_floor,
             destination_floor=destination_floor,
-            elevator_id=nearest_elevator.elevator_id
+            elevator_id=nearest_elevator.elevator_id,
+            people_count=num_people
         )
         db.session.add(user_request)
         db.session.commit()
@@ -68,7 +68,7 @@ def process_requests():
     for req in requests:
         elevator = Elevator.query.filter_by(elevator_id=req.elevator_id).first()
         elevator.current_floor = req.destination_floor
-        elevator.people_count = max(0, elevator.people_count - 1)
+        elevator.people_count = max(0, elevator.people_count - req.people_count)
         elevator.direction = '-'
         db.session.delete(req)
         db.session.commit()
@@ -78,6 +78,11 @@ def process_requests():
 def status():
     elevators = Elevator.query.all()
     return render_template('status.html', elevators=elevators)
+
+@app.route('/users_status')
+def user_status():
+    users = UserRequest.query.all()
+    return render_template('user_status.html', users=users)
 
 if __name__ == "__main__":
     app.run(debug=True)

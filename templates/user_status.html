@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users Status</title>
+</head>
+<body>
+    <h1>Users Status</h1>
+    <table border="1">
+        <tr>
+            <th>UserID</th>
+            <th>Current Floor</th>
+            <th>Destination Floor</th>
+            <th>People Count</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.current_floor }}</td>
+            <td>{{ user.destination_floor }}</td>
+            <td>{{ user.people_count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

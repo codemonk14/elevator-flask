@@ -7,9 +7,9 @@
     <h1>Elevator System</h1>
     <form action="{{ url_for('request_elevator') }}" method="post">
         <label for="current_floor">Current Floor:</label>
-        <input type="number" id="current_floor" name="current_floor" min="0" max="9" required>
+        <input type="number" id="current_floor" name="current_floor" min="1" max="10" required>
         <label for="destination_floor">Destination Floor:</label>
-        <input type="number" id="destination_floor" name="destination_floor" min="0" max="9" required>
+        <input type="number" id="destination_floor" name="destination_floor" min="1" max="10" required>
         <label for="num_people">Number of People:</label>
         <input type="number" id="num_people" name="num_people" min="1" max="20" required>
         <button type="submit">Request Elevator</button>

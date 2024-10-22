@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
-from models import db, Elevator, UserRequest,log_movement
+from models import db, Elevator, UserRequest
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///elevator_system.db'

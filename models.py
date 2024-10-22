@@ -7,7 +7,7 @@ db = SQLAlchemy()
 class Elevator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     elevator_id = db.Column(db.String(1), unique=True, nullable=False)
-    current_floor = db.Column(db.Integer, default=0)
+    current_floor = db.Column(db.Integer, default=1)
     people_count = db.Column(db.Integer, default=0)
     direction = db.Column(db.String(1), default='-')
 

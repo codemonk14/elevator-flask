@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elevator System</title>
+
+</head>
+<body>
+    <h1>Elevator System</h1>
+    
+    <!-- Form to request an elevator -->
+    <form action="{{ url_for('request_elevator') }}" method="post">
+        <label for="current_floor">Current Floor:</label>
+        <input type="number" id="current_floor" name="current_floor" min="1" max="10" required>
+        <label for="destination_floor">Destination Floor:</label>
+        <input type="number" id="destination_floor" name="destination_floor" min="1" max="10" required>
+        <button type="submit">Request Elevator</button>
+    </form>
+    
+    <!-- Table to display elevator status by floor -->
+    <h2>Elevator Status by Floor</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Floor</th>
+                <th>No. of People</th>
+                <th>Level you wish to go to</th>
+                <th>Elevator A</th>
+                <th>Elevator B</th>
+                <th>Elevator C</th>
+                <th>Elevator D</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for floor in range(10, 0, -1) %}
+            <tr>
+                <td>{{ floor }}</td>
+                <td>
+                    {% for elevator in elevators %}
+                        {% if elevator.current_floor == floor %}
+                            {{ elevator.people_count }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for elevator in elevators %}
+                        {% if elevator.current_floor == floor %}
+                            {{ elevator.destination_floor }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                {% for elevator in elevators %}
+                <td>
+                    {% if elevator.current_floor == floor %}
+                        {{ elevator.people_count }} people
+                        {% if elevator.direction == '^' %}
+                            ^
+                        {% elif elevator.direction == 'V' %}
+                            \/
+                        {% else %}
+                            -
+                        {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('process_requests') }}">Process Requests</a>
+    <a href="{{ url_for('status') }}">Check Status</a>
+    <a href="{{ url_for('user_status') }}">Check User Status</a>
+</body>
+</html>

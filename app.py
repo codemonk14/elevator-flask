@@ -25,13 +25,13 @@ with app.app_context():
 @app.route('/')
 def index():
     elevators = Elevator.query.all()
-    return render_template('index.html', elevators=elevators)
+    return render_template('new_index.html', elevators=elevators)
 
 @app.route('/request', methods=['POST'])
 def request_elevator():
     current_floor = int(request.form['current_floor'])
     destination_floor = int(request.form['destination_floor'])
-    num_people = int(request.form['num_people'])
+    num_people = 1 #int(request.form['num_people'])
 
     # Find the nearest available elevator
     elevators = Elevator.query.all()

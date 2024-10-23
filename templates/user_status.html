@@ -10,7 +10,6 @@
             <th>UserID</th>
             <th>Current Floor</th>
             <th>Destination Floor</th>
-            <th>People Count</th>
             <th>Allocated Elevator</th>
         </tr>
         {% for user in users %}
@@ -18,7 +17,6 @@
             <td>{{ user.id }}</td>
             <td>{{ user.current_floor }}</td>
             <td>{{ user.destination_floor }}</td>
-            <td>{{ user.people_count }}</td>
             <td>{{ user.elevator_id }}</td>
         </tr>
         {% endfor %}

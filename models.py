@@ -18,3 +18,8 @@ class UserRequest(db.Model):
     elevator_id = db.Column(db.String(1), db.ForeignKey('elevator.elevator_id'))
     people_count = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.now())
+
+
+class OverallRequests(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    request_details = db.Column(db.String(160), nullable=False)

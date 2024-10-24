@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for
-from models import db, Elevator, UserRequest
+from models import db, Elevator, UserRequest, OverallRequests
+import uuid
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///elevator_system.db'
@@ -87,13 +88,16 @@ def process_elevator_requests(elevator_id):
     else:
         requests = UserRequest.query.filter_by(elevator_id=elevator_id).order_by(UserRequest.destination_floor.desc()).all()
     print(requests)
+    req_id = uuid.uuid4()
     for req in requests:
         print(req)
         elevator = Elevator.query.filter_by(elevator_id=req.elevator_id).first()
         elevator.current_floor = req.destination_floor
         elevator.people_count = max(0, elevator.people_count - 1)
         elevator.direction = '-'
-        print(f"User with id {req.id} requested to go to floor {req.destination_floor} and is now at floor {elevator.current_floor} and total people in elevator at present {elevator.people_count}") 
+        info = f"reqid:{req_id} - User with id {req.id} requested to go to floor {req.destination_floor} and is now at floor {elevator.current_floor} and total people in elevator at present {elevator.people_count}"
+        print(info)
+        db.session.add(OverallRequests(request_details=info))
         db.session.commit()
         db.session.delete(req)
         db.session.commit()
@@ -103,6 +107,11 @@ def process_elevator_requests(elevator_id):
 def status():
     elevators = Elevator.query.all()
     return render_template('status.html', elevators=elevators)
+
+@app.route('/overview')
+def overview():
+    requests = OverallRequests.query.all()
+    return render_template('overview.html', records=requests)
 
 @app.route('/users_status')
 def user_status():
